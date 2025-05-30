@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Variáveis
+DB_NAME="world"
+SQL_URL="https://raw.githubusercontent.com/gitrestart/script-mysql-amazon/master/world.sql"
+MYSQL_PASS="re:St@rt!9"
+
 # Verifica se está como root
 if [ "$EUID" -ne 0 ]; then
  echo "Por favor, execute como root"
@@ -30,9 +35,6 @@ sleep 10
 TEMP_PASS=$(grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}')
 echo "Senha temporária do root extraída: $TEMP_PASS"
 
-# Nova senha padrão definida
-NEW_PASS="re:St@rt!9"
-
 # Instala o expect para automação
 yum install -y expect
 
@@ -58,11 +60,15 @@ send "y\r"
 expect eof
 EOF
 
-# Importação do banco de dados
-echo "[+] Importando banco de dados agora..."
-mysql -u root --password='re:St@rt!9' < world.sql
+echo "[+] Baixando arquivo SQL de $SQL_URL..."
+curl -L -o /tmp/$DB_NAME.sql "$SQL_URL"
+
+# Criando e importação do banco de dados
+echo "[+] Criando banco de dados $DB_NAME..."
+echo "[+] Importando $DB_NAME.sql para $DB_NAME..."
+mysql -u root --password=$MYSQL_PASS < /tmp/$DB_NAME.sql
 
 # Mensagem final
 echo "[+] MySQL instalado e configurado com sucesso!"
-echo "[+] A senha do root é: $NEW_PASS"
-echo "[+] Acesse com:  mysql -u root --password='re:St@rt!9"
+echo "[+] A senha do root é: $MYSQL_PASS"
+echo "[+] Acesse com:  mysql -u root --password=$MYSQL_PASS"
