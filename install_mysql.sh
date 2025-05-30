@@ -60,13 +60,19 @@ send "y\r"
 expect eof
 EOF
 
-echo "[+] Baixando arquivo SQL de $SQL_URL..."
-curl -L -o /tmp/$DB_NAME.sql "$SQL_URL"
+read -p "Digite o número do laboratório (ex: 268, 269): " LAB_NUM
 
-# Criando e importação do banco de dados
-echo "[+] Criando banco de dados $DB_NAME..."
-echo "[+] Importando $DB_NAME.sql para $DB_NAME..."
-mysql -u root --password=$MYSQL_PASS < /tmp/$DB_NAME.sql
+if [ "$LAB_NUM" != "268" ]; then
+  echo "[+] Baixando arquivo SQL de $SQL_URL..."
+  curl -L -o /tmp/$DB_NAME.sql "$SQL_URL"
+
+  # Criando e importação do banco de dados
+  echo "[+] Criando banco de dados $DB_NAME..."
+  echo "[+] Importando $DB_NAME.sql para $DB_NAME..."
+  mysql -u root --password=$MYSQL_PASS < /tmp/$DB_NAME.sql
+else
+  echo "[+] Lab-268 detectado. Etapas de download e importação do banco foram ignoradas."
+fi
 
 # Mensagem final
 echo "[+] MySQL instalado e configurado com sucesso!"
