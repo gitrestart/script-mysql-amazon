@@ -71,4 +71,4 @@ mysql -u root --password=$MYSQL_PASS < /tmp/$DB_NAME.sql
 # Mensagem final
 echo "[+] MySQL instalado e configurado com sucesso!"
 echo "[+] A senha do root é: $MYSQL_PASS"
-echo "[+] Acesse com:  mysql -u root --password=$MYSQL_PASS"
+echo "[+] Acesse com:  mysql -u root --password='$MYSQL_PASS'"
